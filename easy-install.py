@@ -423,7 +423,7 @@ def create_site(
         "backend",
         "bench",
         "new-site",
-        "--no-mariadb-socket",
+        "--mariadb-user-host-login-scope='%'",
         f"--db-root-password={db_pass}",
         f"--admin-password={admin_pass}",
     ]
@@ -722,6 +722,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     args = parser.parse_args()
+
+    if not args.apps:
+        args.apps = ["drive", "dataq", "insights"]
 
     if args.subcommand == "build":
         build_image(

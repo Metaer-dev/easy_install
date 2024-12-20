@@ -1,4 +1,4 @@
-# easy_install
+# EASY INSTALL [中文](README-ZH.md)
 
 The Easy Install script should get you going with a Frappe/ERPNext setup with minimal manual intervention and effort.
 

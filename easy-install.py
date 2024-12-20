@@ -46,13 +46,13 @@ def cprint(*args, level: int = 1):
 def clone_frappe_docker_repo() -> None:
     try:
         urllib.request.urlretrieve(
-            "https://github.com/frappe/frappe_docker/archive/refs/heads/main.zip",
+            "https://github.com/iniself/frappe_docker/archive/refs/heads/metaer.zip",
             "frappe_docker.zip",
         )
-        logging.info("Downloaded frappe_docker zip file from GitHub")
+        logging.info("Downloaded frappe_docker zip file")
         unpack_archive("frappe_docker.zip", ".")
         # Unzipping the frappe_docker.zip creates a folder "frappe_docker-main"
-        move("frappe_docker-main", "frappe_docker")
+        move("frappe_docker-metaer", "frappe_docker")
         logging.info("Unzipped and Renamed frappe_docker")
         os.remove("frappe_docker.zip")
         logging.info("Removed the downloaded zip file")
@@ -121,6 +121,12 @@ def check_repo_exists() -> bool:
     return os.path.exists(os.path.join(os.getcwd(), "frappe_docker"))
 
 
+def check_prod_exists() -> bool:
+    if not os.path.exists(os.path.join(os.getcwd(), "production")):
+        os.makedirs("production", exist_ok=True)
+    return os.path.join(os.getcwd(), "production")
+
+
 def start_prod(
     project: str,
     sites: List[str] = [],
@@ -132,10 +138,11 @@ def start_prod(
 ):
     if not check_repo_exists():
         clone_frappe_docker_repo()
+    prod_path = check_prod_exists()
     install_container_runtime()
 
     compose_file_name = os.path.join(
-        os.path.expanduser("~"),
+        prod_path,
         f"{project}-compose.yml",
     )
     docker_repo_path = os.path.join(os.getcwd(), "frappe_docker")
@@ -163,9 +170,7 @@ def start_prod(
                 "\nA .env file is generated with basic configs. Please edit it to fit to your needs \n",
                 level=3,
             )
-            with open(
-                os.path.join(os.path.expanduser("~"), "passwords.txt"), "w"
-            ) as en:
+            with open(os.path.join(prod_path, "passwords.txt"), "w") as en:
                 en.writelines(f"ADMINISTRATOR_PASSWORD={admin_pass}\n")
                 en.writelines(f"MARIADB_ROOT_PASSWORD={db_pass}\n")
         else:
@@ -244,14 +249,16 @@ def start_prod(
             command,
             check=True,
         )
-        logging.info(f"Docker Compose file generated at ~/{project}-compose.yml")
+        logging.info(
+            f"Docker Compose file generated at production/{project}-compose.yml"
+        )
 
     except Exception as e:
         logging.error("Prod docker-compose failed", exc_info=True)
         cprint(" Docker Compose failed, please check the container logs\n", e)
         sys.exit(1)
 
-    return db_pass, admin_pass
+    return db_pass, admin_pass, prod_path
 
 
 def setup_prod(
@@ -267,7 +274,7 @@ def setup_prod(
     if len(sites) == 0:
         sites = ["site1.localhost"]
 
-    db_pass, admin_pass = start_prod(
+    db_pass, admin_pass, prod_path = start_prod(
         project=project,
         sites=sites,
         email=email,
@@ -289,7 +296,7 @@ def setup_prod(
         level=2,
     )
     passwords_file_path = os.path.join(
-        os.path.expanduser("~"),
+        prod_path,
         "passwords.txt",
     )
     cprint(f"Passwords are stored in {passwords_file_path}", level=3)
@@ -334,7 +341,7 @@ def setup_dev_instance(project: str):
             check=True,
         )
         cprint(
-            "Please go through the Development Documentation: https://github.com/frappe/frappe_docker/tree/main/docs/development.md to fully complete the setup.",
+            "Please go through the Development Documentation: https://gitee.com/iniself/frappe_docker/blob/main/docs/development.md to fully complete the setup.",
             level=2,
         )
         logging.info("Development Setup completed")
@@ -542,8 +549,8 @@ def add_build_parser(subparsers: argparse.ArgumentParser):
     parser.add_argument(
         "-r",
         "--frappe-path",
-        help="Frappe Repository to use, default: https://github.com/frappe/frappe",
-        default="https://github.com/frappe/frappe",
+        help="Frappe Repository to use, default: https://gitee.com/iniself/frappe",
+        default="https://gitee.com/iniself/frappe",
     )
     parser.add_argument(
         "-b",

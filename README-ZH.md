@@ -2,6 +2,30 @@
 
 [easy-install.py](easy-install.py) 是一键安装 frappe 的脚本文件。中文文档不会详细介绍该脚本的用途，只会介绍最快上手的路径，更详细内容请查看 [英文文档](README.md)。
 
+***
+
+#### 几个问题
+
+先集中回答几个有关 `deploy` 问题：
+
+1. 本脚本已最少依赖 github 了，但是 gitee 有个问题没法解决。所以如果是 github 连接问题：进入脚本目录（默认是 `easy_install`）然后 `git clone -b metaer https://gitee.com/iniself/frappe_docker.git`
+2. `deploy` 用到的 compose 文件大量使用了腾讯镜像，但这些镜像目前属于私有镜像。所以查找 `overrides` 目录下有 `tencent` 的镜像并修改成 dockerhub 镜像。
+3. `deploy`成功后访问网站出错。该脚本默认暴露的是 `8080`。假设站点是`dev.localhost`，那么访问的地址应该是`dev.localhost:8080`
+4. `deploy`默认会给站点安装`drive`，`dataq`，`insights`。但目前`insights`会影响站点初始化，所以请带 `--app drive,dataq` 进行部署。
+```sh
+$ python3 easy-install.py deploy \
+    --image your_custom_image \
+    --version latest\   
+    --project your_project\
+    --email your_email\ 
+    --sitename your_site\ 
+    --app drive\
+    --app dataq
+```
+站点初始化成功后，可以再进入 backend 容器进行 `insights` 的安装：`bench --site your_site install-app insights`
+
+***
+
 #### 前置要求
 1. 首先你的系统需要有最新的 Python 环境。
 2. `docker`在系统是 linux 时也不是必须的，因为脚本会自动安装 docker。当系统是 `windows` 或则 `macos` 时，则需要提前准备好 docker
@@ -57,7 +81,8 @@ $ python3 easy-install.py deploy \
     --project your_project\
     --email your_email\ 
     --sitename your_site\ 
-    --app drive,insights
+    --app drive\
+    --app insights
 ```
 
 **镜像构建**

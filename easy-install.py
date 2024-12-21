@@ -423,7 +423,7 @@ def create_site(
         "backend",
         "bench",
         "new-site",
-        "--mariadb-user-host-login-scope='%'",
+        "--mariadb-user-host-login-scope=%",
         f"--db-root-password={db_pass}",
         f"--admin-password={admin_pass}",
     ]

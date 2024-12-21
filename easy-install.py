@@ -46,7 +46,7 @@ def cprint(*args, level: int = 1):
 def clone_frappe_docker_repo() -> None:
     try:
         urllib.request.urlretrieve(
-            "https://github.com/iniself/frappe_docker/archive/refs/heads/metaer.zip",
+            "https://github.com/Metaer-dev/frappe_docker/archive/refs/heads/metaer.zip",
             "frappe_docker.zip",
         )
         logging.info("Downloaded frappe_docker zip file")

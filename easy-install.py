@@ -601,6 +601,12 @@ def add_build_parser(subparsers: argparse.ArgumentParser):
         help="Upgrade after build",
         action="store_true",
     )
+    parser.add_argument(
+        "-nc",
+        "--no-cache",
+        help="Do not use cache when building the image",
+        action="store_true",
+    )
 
 
 def add_deploy_parser(subparsers: argparse.ArgumentParser):
@@ -635,6 +641,7 @@ def build_image(
     tags: List[str],
     python_version: str,
     node_version: str,
+    no_cache: bool,
 ):
     if not check_repo_exists():
         clone_frappe_docker_repo()
@@ -672,6 +679,9 @@ def build_image(
         f"--build-arg=APPS_JSON_BASE64={apps_json_base64}",
         ".",
     ]
+
+    if no_cache:
+        command.append("--no-cache")
 
     try:
         subprocess.run(
@@ -739,6 +749,7 @@ if __name__ == "__main__":
             containerfile_path=args.containerfile,
             python_version=args.python_version,
             node_version=args.node_version,
+            no_cache=args.no_cache,
         )
         if args.deploy:
             setup_prod(

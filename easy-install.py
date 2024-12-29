@@ -734,10 +734,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.apps:
-        args.apps = ["drive", "dataq", "insights", "frapify"]
+        args.apps = ["drive", "dataq", "insights", "nori"]
 
-    if not "frapify" in args.apps:
-        args.apps.append("frapify")
+    if not "nori" in args.apps:
+        args.apps.append("nori")
 
     if args.subcommand == "build":
         build_image(

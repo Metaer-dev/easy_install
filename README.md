@@ -1,8 +1,8 @@
 # EASY INSTALL [中文](README-ZH.md)
 
-The Easy Install script should get you going with a Frappe/ERPNext setup with minimal manual intervention and effort.
+The Easy Install script should get you going with a Frappe setup with minimal manual intervention and effort.
 
-This script uses Docker with the Frappe/ERPNext Docker Repository and can be used for both Development setup and Production setup.
+This script uses Docker with the [Frappe Docker Repository](https://github.com/frappe/frappe_docker) and can be used for both Development setup and Production setup.
 
 #### Setup
 
@@ -23,7 +23,8 @@ When the setup is complete, you will be able to access the system at `http://<yo
 
 Here are the arguments for the easy-install script
 
-**Build custom images**
+<details>
+<summary><b>Build custom images</b></summary>
 
 ```txt
 usage: easy-install.py build [-h] [-n PROJECT] [-i IMAGE] [-q] [-m HTTP_PORT] [-v VERSION] [-a APPS] [-s SITES] [-e EMAIL]
@@ -34,6 +35,8 @@ options:
   -h, --help            show this help message and exit
   -n PROJECT, --project PROJECT
                         Project Name
+  -g, --backup-schedule BACKUP_SCHEDULE
+                        Backup schedule cronstring, default: "@every 6h"
   -i IMAGE, --image IMAGE
                         Full Image Name
   -q, --no-ssl          No https
@@ -63,8 +66,10 @@ options:
   -x, --deploy          Deploy after build
   -u, --upgrade         Upgrade after build
 ```
+</details>
 
-**Deploy using compose**
+<details>
+<summary><b>Deploy using compose</b></summary>
 
 ```txt
 usage: easy-install.py deploy [-h] [-n PROJECT] [-i IMAGE] [-q] [-m HTTP_PORT] [-v VERSION] [-a APPS] [-s SITES] [-e EMAIL]
@@ -73,6 +78,8 @@ options:
   -h, --help            show this help message and exit
   -n PROJECT, --project PROJECT
                         Project Name
+  -g, --backup-schedule BACKUP_SCHEDULE
+                        Backup schedule cronstring, default: "@every 6h"
   -i IMAGE, --image IMAGE
                         Full Image Name
   -q, --no-ssl          No https
@@ -86,8 +93,10 @@ options:
   -e EMAIL, --email EMAIL
                         Add email for the SSL.
 ```
+</details>
 
-**Upgrade existing project**
+<details>
+<summary><b>Upgrade existing project</b></summary>
 
 ```txt
 usage: easy-install.py upgrade [-h] [-n PROJECT] [-i IMAGE] [-q] [-m HTTP_PORT] [-v VERSION]
@@ -96,6 +105,8 @@ options:
   -h, --help            show this help message and exit
   -n PROJECT, --project PROJECT
                         Project Name
+  -g, --backup-schedule BACKUP_SCHEDULE
+                        Backup schedule cronstring, default: "@every 6h"
   -i IMAGE, --image IMAGE
                         Full Image Name
   -q, --no-ssl          No https
@@ -104,8 +115,10 @@ options:
   -v VERSION, --version VERSION
                         ERPNext or image version to install, defaults to latest stable
 ```
+</details>
 
-**Development setup using compose**
+<details>
+<summary><b>Development setup using compose</b></summary>
 
 ```txt
 usage: easy-install.py develop [-h] [-n PROJECT]
@@ -115,8 +128,10 @@ options:
   -n PROJECT, --project PROJECT
                         Compose project name
 ```
+</details>
 
-**Exec into existing project**
+<details>
+<summary><b>Exec into existing project</b></summary>
 
 ```txt
 usage: easy-install.py exec [-h] [-n PROJECT]
@@ -126,6 +141,7 @@ options:
   -n PROJECT, --project PROJECT
                         Project Name
 ```
+</details>
 
 To use custom apps, you need to create a json file with list of apps and pass it to build command.
 
